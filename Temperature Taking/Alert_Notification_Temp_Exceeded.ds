@@ -1,0 +1,416 @@
+/*
+ * Author       : cedric1308132
+ * Generated on : 10-Apr-2021 08:05:01
+ * Version      : 1.0
+ */
+ application "Temperature Taking Form"
+ {
+ 	date format = "dd-MMM-yyyy"
+ 	time zone = "Singapore"
+ 	time format = "24-hr"
+	section Employee_Temperatures
+	{
+		displayname= "Employee Temperatures"
+		list Attendance_View
+		{
+			displayName = "Temperature Log View"
+			template = Test_Template
+			print template = Test_Template
+			show all rows from Fill_Attendance    
+			(
+				Staff_Name  as "Name"
+	 			(
+	      			displayformat = [first_name1+""+prefix1+""+last_name1+""+suffix1]
+	 			)
+				Date_field as "Date"
+				Department
+				Temperature_ID1 as "Temperature"
+				Added_Time as "Added Time"
+			)
+			filters
+			(
+				Date_field
+			)
+			group by
+			(
+				properties
+    			(
+  	    			display record count = true
+   				)
+				Department descending
+			)
+			sort by
+			(
+				Date_field descending
+			)
+			options
+			(
+				icon = "list-alt"
+	 		)
+			conditional formatting
+			(
+				"New Formatting"
+				{
+				fields = [Staff_Name.first_name1]
+				format = "font-weight:bold;color:#ef1616;background-color:#ffffff;"
+				}
+				"New Formatting"
+				{
+				format = "font-weight:bold;color:#333;"
+				}
+				"Highlight when Temp > 37.5"
+				{
+				condition = (Temperature_ID1 > 37.5)
+				fields = [Staff_Name.first_name1, Date_field, Department, Temperature_ID1, Added_Time]
+				format = "color:#ffffff;background-color:#e84c3d;"
+				}
+			)
+			quickview
+			(
+				layout
+				(
+		 			type = -1
+					datablock1
+					(
+			 			layout type = -1
+		     			title = "Overview"
+						fields
+						(
+							Staff_Name as "Name"
+							Department
+							Date_field as "Date"
+							Temperature_ID1 as "Temperature"
+							Added_Time as "Added Time"
+						)
+					)
+				)
+
+				menu
+    			(
+    	 			header
+    	 			(
+    		 			Edit 
+    		 			Duplicate 
+    		 			Delete 
+    		 			Add 
+    		 			Print 
+    		 			Import 
+    		 			Export 
+    	 			)
+							record
+							(
+								Edit   	   
+								Duplicate   	   
+								Print   	   
+								Delete   	   
+    						)
+    			)
+    			action
+    			(
+							on click
+							(
+								View Record   	   
+    						)
+							on right click
+							(
+								Edit   	   
+								Delete   	   
+								Duplicate   	   
+								Print   	   
+								View Record   	   
+    						)
+     			)
+			)
+			detailview
+			(
+				layout
+				(
+		 			type = 1
+					datablock1
+					(
+			 			layout type = -2
+		     			title = "Overview"
+						fields
+						(
+							Staff_Name as "Name"
+							Department
+							Date_field as "Date"
+						)
+					)
+				)
+
+				menu
+    			(
+    	 			header
+    	 			(
+    		 			Edit 
+    		 			Duplicate 
+    		 			Print 
+    		 			Delete 
+    	 			)
+    			)
+			)
+		}
+		form Fill_Attendance
+		{
+			displayname = "Temperature Taking Form"
+			success message = "Temperature Added Successfully!"
+			field alignment = left
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have Staff_Name
+			(
+    			type = name
+				displayname = "Name"
+     			prefix1
+     			(
+	     			 type = prefix
+	     			 displayname ="Prefix"
+	     			 visibility = false
+	     			 value = {"Mr.","Mrs.","Ms."}
+     			) 
+     			first_name1
+     			(
+	     			 type = first_name
+	     			 displayname ="Name"
+     			) 
+     			last_name1
+     			(
+	     			 type = last_name
+	     			 displayname ="Last Name"
+	     			 visibility = false
+     			) 
+     			suffix1
+     			(
+	     			 type = suffix
+	     			 displayname ="Suffix"
+	     			 visibility = false
+     			) 
+	 			row = 1
+	 			column = 1   
+				width = medium
+				personal data = true
+			)
+			must have Department
+			(
+				type = picklist
+				values = {"Content Team", "HR and Finance", "Media Team", "Visitors"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Date_field
+			(
+    			type = date
+				displayname = "Date"
+				alloweddays = 1,2,3,4,5
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Temperature_ID1
+			(
+				type = decimal
+				displayname = "Temperature"
+				maxchar = 5
+				initial value = 0.0
+				decimalplace = 1
+    			description
+    			[
+    				type = help_text
+    			 	message = "Please indicate your temperature! (one decimal place)"
+    			]
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+	
+			customize
+			(
+				icon = "list-alt"
+			)
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		print template
+			{
+				Test_Template
+				{
+						displayname = "Test Template"
+						content = {"pageNumberOption":null,"orientation":"null","images":[{"fileName":"","imageId":"","imageType":"","fileId":""},{"fileName":"","imageId":"","imageType":"","fileId":""}],"isFooterEnabled":true,"footer":{"imageId":"","elements":[],"style":"display: block","bgImg":""},"containerStyle":"","templateStyle":"text-align: left; width: 793.7px; margin: 0px auto; padding: 30px","version":"2","layout":"1","mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"u_elem_9283889000001363","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9283878500002902","fields":[],"content":"<div style=\"\"><br /><br /><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9283936500002164","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9283928499999456","fields":[],"content":"<div style=\"\"><br /><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_928395550000132","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_92839495000022","fields":[],"content":"<div style=\"\"><p style=\"text-align: center\"><font size=\"3\">Please find the details below :<\/font><\/p><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9283976000000257","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_928396950000315","fields":[],"content":"<div style=\"\"><br /><br /><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9283986499998719","elemStyle":"background-color: rgb(250, 250, 250)","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9285214500001166","fields":[],"content":"<div style=\"\"><p><br /><\/p><\/div>"}},{"id":"u_elem_1134037450000178","type":"fields","element":{"valueStyle":"width: 50%","valueTextStyle":"","fieldLayoutType":"2","labelText":"Date","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"Date_field","labelTextStyle":""}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9285239000001457","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_96614019745814729","type":"fields","element":{"valueStyle":"width: 50%","valueTextStyle":"","fieldLayoutType":"2","labelText":"Name","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"Staff_Name","labelTextStyle":"","compFields":["prefix1","first_name1","last_name1","suffix1"]}},{"type":"columns","element":{"split":"100","id":"u_elem_21519700500002364","elemStyle":"","collayouts":[{"colElements":[{"id":"u_elem_96614019745825205","type":"fields","element":{"valueStyle":"width: 50%","valueTextStyle":"","fieldLayoutType":"2","labelText":"Department","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"Department","labelTextStyle":""}},{"id":"u_elem_96614019745827336","type":"fields","element":{"valueStyle":"width: 50%","valueTextStyle":"","fieldLayoutType":"2","labelText":"Temperature","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"Temperature_ID1","labelTextStyle":""}},{"id":"u_elem_96614019745829097","type":"fields","element":{"valueStyle":"width: 50%","valueTextStyle":"","fieldLayoutType":"2","labelText":"Added Time","wrapperStyle":"","labelStyle":"width: 50%","Label_Name":"Added_Time","labelTextStyle":""}},{"type":"text","element":{"id":"u_elem_9285229000000982","fields":[],"content":"<div style=\"\"><br /><br /><br /><\/div>"}}]}]}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9285289999999804","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_9285284000000684","fields":[],"content":"<div style=\"\"><br /><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"u_elem_9285330000001704","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_928532300000079","fields":[],"content":"<div style=\"\"><br /><\/div>"}}]}]}}],"id":1}],"resize":"a4","header":{"imageId":"","elements":[{"type":"columns","element":{"split":"23,54,23","id":"u_elem_928143900000141","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"u_elem_928359300000011","fields":[],"content":"<div style=\"\"><p><br /><\/p><\/div>"}}]},{"colElements":[{"type":"columns","element":{"split":"100","id":"u_elem_9283634999999776","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Date_field"},{"Label_Name":"Staff_Name"}],"id":"u_elem_9283799999998882","content":"<div style=\"\"><p style=\"text-align: center\"><font\n        style=\"font-size: 30px\"><b\n          style=\"font-size: 30px\"><span>${Staff_Name}<\/span><span\n          style=\"color: rgb(0, 0, 0); font-family: Lato, sans-serif; font-size: 30px; font-weight: 700; font-style: normal\">&#39;s&nbsp;<\/span>Temperature for&nbsp;<span style=\"color: rgb(0, 0, 0); font-family: Lato, sans-serif; font-size: 30px; font-weight: 700; font-style: normal\">${Date_field}<\/span>&nbsp;(Test Run)<\/b><\/font><\/p><\/div>"}}]}]}}]},{"colElements":[{"type":"text","element":{"id":"u_elem_9283814499998698","fields":[],"content":"<div style=\"\"><p><br /><\/p><\/div>"}}]}]}}],"style":"border-color: rgb(255, 255, 255); background-color: rgb(255, 255, 255)","bgImg":""},"themeFont":"ntent-wrapper builderContent builder_body_outer_wrapper recordSummarybuilder","isHeaderEnabled":true}
+				}
+			}
+		}
+	}
+	functions
+	{
+ 			void Test_Run()
+			{
+			}
+	}
+
+
+
+		workflow
+		{
+		form
+		{
+			When_user_submits_form as "When user submits form"
+			{
+				type =  form
+				form = Fill_Attendance
+				record event = on add
+
+				on validate
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											if(Temperature_ID1 > 37.5)
+										{
+											sendmail
+											[
+												from :zoho.adminuserid
+												to :"cedric130813@gmail.com"
+												subject :"Temperature Recorded Exceeds 37.5"
+												message :"<div>Alert:<br></div><div>An Employee Recorded Temperature Above 37.5.<br></div><div>Action Required.<br></div><div>Please check status in dashboard.<br></div><div><br></div><div> <br><div>The Temperature recorded is: </div>" + input.Temperature_ID1 + "<br><div>The Employee is: </div>" + input.Staff_Name
+											]
+										}
+						)
+					}
+					actions  (Temperature_ID1 > 37.5)
+					{
+						custom deluge script
+						(
+											zoho.cliq.postToChannelAsAdmin("temptestchannel",input.Staff_Name + " from " + input.Department + " triggered the Temperature Alert");
+						)
+					}
+				}
+
+			}
+			Send_Email_Form_Propertie as "Send Email - Form Properties"
+			{
+				type =  presuccess
+				form = Fill_Attendance
+					status = inactive
+				on start
+				{
+					actions 
+					{
+						sendmail
+						(
+							from : "zoho.adminuserid"
+							to : "zoho.adminuserid"
+							subject : "New Entry Alert"
+							message : "<div><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\"><b>Notification:</b></span><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\"><br></span></div><div><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\"><br></span><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\">${first_name1} from ${Department} submitted the temperature form at&nbsp;${Added_Time},&nbsp;${Date_field}.</span></div><div><br></div><div>Recorded Temperature:&nbsp;${Temperature_ID1}</div><div><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\"><br></span></div><div><span style=\"font-family: OpenSans, sans-serif;\" class=\"font\">Thank you.</span><br><br></div><br><br>"
+						)
+					}
+				}
+			}
+		}
+
+		schedule
+		{
+			Test_Run as "Test Run"
+			{
+				type =  schedule
+					status = inactive
+				start = "2021-04-10 17:47:00"
+				time zone = "Singapore"
+				on start
+				{
+					actions 
+					{
+						sendmail
+						(
+							from : "zoho.adminuserid"
+							to : "cedric130813@gmail.com"
+							subject : "Temperature Update"
+							message : "<div>Good Evening, this is the current update of the overall temperatures taken.<br></div><div><br></div><div><br></div><div>Thank you.<br></div>"
+							attachments : view : Attendance_View as PDF
+						)
+					}
+				}
+			}
+		}
+	}
+	share_settings
+	{
+			"Read"
+			{
+				name = "Read"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have read permission for all components\n"
+			}
+			"Write"
+			{
+				name = "Write"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have write permission for all components\n"
+			}
+			"Administrator"
+			{
+				name = "Administrator"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have all the permissions.\n"
+			}
+			roles
+			{
+				"CEO"
+				{
+					description = "User belonging to this role can access data of all other users."
+				}
+			}
+	}
+
+	customize
+	{
+		
+		layout = "tab"
+		color = "black"
+		base theme = "professional"
+		new theme = 3
+		new theme color = 1
+		icons = true
+	}
+
+	translation
+{
+{"Language_Settings":{"LANGAGUE_WITH_LOGIN":"browser"}}
+}
+}
