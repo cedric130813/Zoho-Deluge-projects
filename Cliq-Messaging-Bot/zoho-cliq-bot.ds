@@ -1,0 +1,6 @@
+info user;
+userFirstName = user.get("first_name");
+crm_manual = "https://workdrive.zoho.com/file/oge0o2cbc19e7cb7447058cbccf58e9069cf5";
+response = Map();
+response.put("text","Hi " + userFirstName + ", thanks for your request. This is the manual: " + crm_manual + " :smile:");
+return response;
