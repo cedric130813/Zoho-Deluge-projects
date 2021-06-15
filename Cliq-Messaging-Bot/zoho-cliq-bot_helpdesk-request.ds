@@ -1,0 +1,6 @@
+info user;
+userFirstName = user.get("first_name");
+response = Map();
+response.put("text","Hi there, thanks for your feedback. Let me get back to you shortly");
+zoho.cliq.postToChannel("medialistcrmproject",userFirstName + " sent this feedback on the CRM" + " Feedback: " + arguments);
+return response;
