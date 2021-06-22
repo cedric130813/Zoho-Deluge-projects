@@ -1,7 +1,12 @@
 info user;
 userFirstName = user.get("first_name");
+
 crm_manual = "<INSERT LINK>";
+
 response = Map();
+
 response.put("text","Hi " + userFirstName + ", thanks for your request. This is the manual: " + crm_manual + " :smile:");
+
 // sends to the user the link to the document when the user submits the custom slash command in Zoho Cliq
+
 return response;
