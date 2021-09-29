@@ -1,4 +1,4 @@
-# Zoho Deluge Projects
+### Zoho Deluge Projects
 
 This is a Temperature Taking form created using [Zoho Deluge](https://www.zoho.com/deluge/), which is Zoho's proprietary scripting language.
 - The form is also integrated into Zoho Cliq (Zoho's online messaging platform) which allows for alert messages to be sent to managers when an employee records a temperature of 37.5 degrees celsius.
